@@ -82,7 +82,7 @@ public class EditorialServicio {
         }
     }
 
-    public void validarDatos(String nombre, Boolean alta) throws ErrorServicio {
+    private void validarDatos(String nombre, Boolean alta) throws ErrorServicio {
 
         if (nombre.trim().isEmpty() || nombre == null) {
             throw new ErrorServicio("El nombre no puede ser nulo");
