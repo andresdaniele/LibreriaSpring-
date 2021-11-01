@@ -13,6 +13,6 @@ public interface RepositorioEditorial extends JpaRepository<Editorial, String> {
     @Query("SELECT e FROM Editorial e WHERE e.nombre = :nombre")
     public Editorial buscarEditorialPorNombre(@Param("nombre") String nombre);
 
-    @Query("SELECT e FROM Editorial e ORDER BY e.nombre ASC")
+    @Query("SELECT e FROM Editorial e WHERE e.alta = true ORDER BY e.nombre ASC")
     public List<Editorial> listarEditoriales();
 }
