@@ -8,6 +8,7 @@ import com.libreria.egg.repositorios.RepositorioCliente;
 import com.libreria.egg.repositorios.RepositorioLibro;
 import com.libreria.egg.repositorios.RepositorioPrestamo;
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -59,6 +60,31 @@ public class PrestamoServicio {
         }
     }
 
+    @Transactional
+    public void darDeBajaPrestamo(String id) throws ErrorServicio {
+
+        Optional<Prestamo> respuesta = repositorioPrestamo.findById(id);
+
+        if (respuesta.isPresent() && respuesta.get().getAlta() == Boolean.TRUE) {
+            Prestamo prestamo = respuesta.get();
+            prestamo.setAlta(Boolean.FALSE);
+            repositorioPrestamo.save(prestamo);
+        } else {
+            throw new ErrorServicio("El Id ingresado no pertenece a un prestamo registrado");
+        }
+    }
+
+    @Transactional
+    public void eliminarPrestamo(String id) throws ErrorServicio {
+
+        Optional<Prestamo> respuesta = repositorioPrestamo.findById(id);
+
+        if (respuesta.isPresent()) {
+            repositorioPrestamo.delete(respuesta.get());
+        } else {
+            throw new ErrorServicio("El Id ingresado no pertenece a un prestamo registrado");
+        }
+    }
 
     private void validarDatos(Date fechaPrestamo, Date fechaDevolucion, Boolean alta, Libro libro, Cliente cliente) throws ErrorServicio {
 
@@ -82,6 +108,47 @@ public class PrestamoServicio {
         Optional<Cliente> respuestaCliente = repositorioCliente.findById(cliente.getId());
         if (!respuestaCliente.isPresent()) {
             throw new ErrorServicio("El cliente ingresado no se encuentra registrado");
+        }
+    }
+
+    public List<Prestamo> listarPrestamosCliente(Cliente cliente) throws ErrorServicio {
+
+        if (cliente == null) {
+            throw new ErrorServicio("El cliente ingresado no puede ser nulo");
+        }
+
+        List<Prestamo> prestamosClientes = repositorioPrestamo.listarPrestamosCliente(cliente);
+
+        if (prestamosClientes.isEmpty() || prestamosClientes == null) {
+            throw new ErrorServicio("El cliente ingresado no posee prestamos activos");
+        } else {
+            return prestamosClientes;
+        }
+    }
+
+    public List<Prestamo> listarPrestamosLibro(Libro libro) throws ErrorServicio {
+
+        if (libro == null) {
+            throw new ErrorServicio("El libro ingresado no puede ser nulo");
+        }
+
+        List<Prestamo> prestamosLibro = repositorioPrestamo.listarPrestamoLibros(libro);
+
+        if (prestamosLibro.isEmpty() || prestamosLibro == null) {
+            throw new ErrorServicio("El libro ingresado no posee prestamos activos");
+        } else {
+            return prestamosLibro;
+        }
+    }
+
+    public List<Prestamo> listarTodosLosPrestamosActivos() throws ErrorServicio {
+
+        List<Prestamo> prestamosActivos = repositorioPrestamo.listarTodosLosPrestamosActivos();
+
+        if (prestamosActivos.isEmpty() || prestamosActivos == null) {
+            throw new ErrorServicio("Aun no hay prestamos activos");
+        } else {
+            return prestamosActivos;
         }
     }
 }
