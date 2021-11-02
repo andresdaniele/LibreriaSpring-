@@ -22,7 +22,7 @@ public class Prestamo {
     Date fechaPrestamo;
     
     @Temporal(TemporalType.TIMESTAMP)
-    Date fehcaDevolucion;
+    Date fechaDevolucion;
     
     Boolean alta;
     
@@ -51,14 +51,14 @@ public class Prestamo {
         this.fechaPrestamo = fechaPrestamo;
     }
 
-    public Date getFehcaDevolucion() {
-        return fehcaDevolucion;
+    public Date getFechaDevolucion() {
+        return fechaDevolucion;
     }
 
-    public void setFehcaDevolucion(Date fehcaDevolucion) {
-        this.fehcaDevolucion = fehcaDevolucion;
+    public void setFechaDevolucion(Date fechaDevolucion) {
+        this.fechaDevolucion = fechaDevolucion;
     }
-
+    
     public Boolean getAlta() {
         return alta;
     }

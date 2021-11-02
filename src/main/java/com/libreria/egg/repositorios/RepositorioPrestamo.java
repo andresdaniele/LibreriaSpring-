@@ -18,7 +18,7 @@ public interface RepositorioPrestamo extends JpaRepository<Prestamo, String> {
     @Query("SELECT p FROM Prestamo p WHERE p.libro = :libro AND alta = true")
     public List<Prestamo> listarPrestamoLibros(@Param("libro") Libro libro);
 
-    @Query("SELECT p FROM Prestamo p WHERE alta = true ORDER BY p.fechaPrestamo ASC")
+    @Query("SELECT p FROM Prestamo p WHERE alta = true ORDER BY p.fechaPrestamo DESC")
     public List<Prestamo> listarTodosLosPrestamosActivos();
 
 }
