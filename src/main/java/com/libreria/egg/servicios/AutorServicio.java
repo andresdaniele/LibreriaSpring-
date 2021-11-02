@@ -58,7 +58,7 @@ public class AutorServicio {
 
         Optional<Autor> respuesta = repositorioAutor.findById(id);
 
-        if (respuesta.isPresent() || respuesta.get().getAlta() == Boolean.TRUE) {
+        if (respuesta.isPresent() && respuesta.get().getAlta() == Boolean.TRUE) {
             Autor autor = respuesta.get();
             autor.setAlta(Boolean.FALSE);
             repositorioAutor.save(autor);
@@ -72,7 +72,7 @@ public class AutorServicio {
 
         Optional<Autor> respuesta = repositorioAutor.findById(id);
 
-        if (respuesta.isPresent() || respuesta.get().getAlta() == Boolean.FALSE) {
+        if (respuesta.isPresent() && respuesta.get().getAlta() == Boolean.FALSE) {
             Autor autor = respuesta.get();
             autor.setAlta(Boolean.TRUE);
             repositorioAutor.save(autor);

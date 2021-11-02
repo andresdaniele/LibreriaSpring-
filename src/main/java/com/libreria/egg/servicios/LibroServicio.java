@@ -93,7 +93,7 @@ public class LibroServicio {
 
         Optional<Libro> respuesta = repositorioLibro.findById(id);
 
-        if (respuesta.isPresent() || respuesta.get().getAlta() == Boolean.TRUE) {
+        if (respuesta.isPresent() && respuesta.get().getAlta() == Boolean.TRUE) {
             Libro libro = respuesta.get();
             libro.setAlta(Boolean.FALSE);
             repositorioLibro.save(libro);
@@ -107,7 +107,7 @@ public class LibroServicio {
 
         Optional<Libro> respuesta = repositorioLibro.findById(id);
 
-        if (respuesta.isPresent() || respuesta.get().getAlta() == Boolean.FALSE) {
+        if (respuesta.isPresent() && respuesta.get().getAlta() == Boolean.FALSE) {
             Libro libro = respuesta.get();
             libro.setAlta(Boolean.TRUE);
             repositorioLibro.save(libro);

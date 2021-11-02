@@ -59,7 +59,7 @@ public class EditorialServicio {
 
         Optional<Editorial> respuesta = repositorioEditorial.findById(id);
 
-        if (respuesta.isPresent() || respuesta.get().getAlta() == Boolean.TRUE) {
+        if (respuesta.isPresent() && respuesta.get().getAlta() == Boolean.TRUE) {
             Editorial editorial = respuesta.get();
             editorial.setAlta(Boolean.FALSE);
             repositorioEditorial.save(editorial);
@@ -73,7 +73,7 @@ public class EditorialServicio {
 
         Optional<Editorial> respuesta = repositorioEditorial.findById(id);
 
-        if (respuesta.isPresent() || respuesta.get().getAlta() == Boolean.FALSE) {
+        if (respuesta.isPresent() && respuesta.get().getAlta() == Boolean.FALSE) {
             Editorial editorial = respuesta.get();
             editorial.setAlta(Boolean.TRUE);
             repositorioEditorial.save(editorial);
