@@ -43,25 +43,13 @@ public class EditorialServicio {
     }
 
     @Transactional
-    public void eliminarEditorial(String id) throws ErrorServicio {
-
-        Optional<Editorial> respuesta = repositorioEditorial.findById(id);
-
-        if (respuesta.isPresent()) {
-            repositorioEditorial.delete(respuesta.get());
-        } else {
-            throw new ErrorServicio("El id ingresado no corresponde a una editorial registrada");
-        }
-    }
-
-    @Transactional
     public void deshabilitarEditorial(String id) throws ErrorServicio {
 
         Optional<Editorial> respuesta = repositorioEditorial.findById(id);
 
-        if (respuesta.isPresent() && respuesta.get().getAlta() == Boolean.TRUE) {
+        if (respuesta.isPresent() && respuesta.get().getAlta() == true) {
             Editorial editorial = respuesta.get();
-            editorial.setAlta(Boolean.FALSE);
+            editorial.setAlta(false);
             repositorioEditorial.save(editorial);
         } else {
             throw new ErrorServicio("El id ingresado no corresponde a una editorial registrada o la editorial ya se encuentra dehabilitada");
@@ -93,6 +81,7 @@ public class EditorialServicio {
         }
     }
 
+    @Transactional(readOnly = true)
     public Editorial buscarEditorialPorNombre(String nombre) throws ErrorServicio {
 
         if (nombre == null || nombre.trim().isEmpty()) {
@@ -108,6 +97,7 @@ public class EditorialServicio {
         }
     }
 
+    @Transactional(readOnly = true)
     public Editorial buscarEditoriaPorId(String id) throws ErrorServicio {
 
         if (id == null || id.trim().isEmpty()) {
@@ -123,6 +113,7 @@ public class EditorialServicio {
         }
     }
 
+    @Transactional(readOnly = true)
     public List<Editorial> listarTodasLasEditoriales() throws ErrorServicio {
 
         List<Editorial> editoriales = repositorioEditorial.listarEditoriales();

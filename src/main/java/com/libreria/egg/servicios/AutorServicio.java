@@ -42,25 +42,13 @@ public class AutorServicio {
     }
 
     @Transactional
-    public void eliminarautor(String id) throws ErrorServicio {
-
-        Optional<Autor> respuesta = repositorioAutor.findById(id);
-
-        if (respuesta.isPresent()) {
-            repositorioAutor.delete(respuesta.get());
-        } else {
-            throw new ErrorServicio("El id ingresado no corresponde a un autor registrado");
-        }
-    }
-
-    @Transactional
     public void deshabilitarAutor(String id) throws ErrorServicio {
 
         Optional<Autor> respuesta = repositorioAutor.findById(id);
 
-        if (respuesta.isPresent() && respuesta.get().getAlta() == Boolean.TRUE) {
+        if (respuesta.isPresent() && respuesta.get().getAlta() == true) {
             Autor autor = respuesta.get();
-            autor.setAlta(Boolean.FALSE);
+            autor.setAlta(false);
             repositorioAutor.save(autor);
         } else {
             throw new ErrorServicio("El id ingresado no corresponde a un autor registrado o el autor ya se encuentra deshabilitado");
@@ -72,9 +60,9 @@ public class AutorServicio {
 
         Optional<Autor> respuesta = repositorioAutor.findById(id);
 
-        if (respuesta.isPresent() && respuesta.get().getAlta() == Boolean.FALSE) {
+        if (respuesta.isPresent() && respuesta.get().getAlta() == false) {
             Autor autor = respuesta.get();
-            autor.setAlta(Boolean.TRUE);
+            autor.setAlta(true);
             repositorioAutor.save(autor);
         } else {
             throw new ErrorServicio("El id ingresado no corresponde a un autor registrado o el autor no se encuentra habilitado");
@@ -92,6 +80,7 @@ public class AutorServicio {
         }
     }
 
+    @Transactional(readOnly = true)
     public Autor buscarAutorPorNombre(String nombre) throws ErrorServicio {
 
         if (nombre == null || nombre.trim().isEmpty()) {
@@ -107,6 +96,7 @@ public class AutorServicio {
         }
     }
 
+    @Transactional(readOnly = true)
     public Autor buscarAutorPorId(String id) throws ErrorServicio {
 
         if (id == null || id.trim().isEmpty()) {
@@ -122,6 +112,7 @@ public class AutorServicio {
         }
     }
 
+    @Transactional(readOnly = true)
     public List<Autor> listarTodosLosAutores() throws ErrorServicio {
 
         List<Autor> autores = repositorioAutor.listarAutores();

@@ -76,26 +76,15 @@ public class LibroServicio {
         }
     }
 
-    @Transactional
-    public void eliminarLibro(String id) throws ErrorServicio {
-
-        Optional<Libro> respuesta = repositorioLibro.findById(id);
-
-        if (respuesta.isPresent()) {
-            repositorioLibro.delete(respuesta.get());
-        } else {
-            throw new ErrorServicio("El id ingresado no corresponde a un libro registrado");
-        }
-    }
 
     @Transactional
     public void deshabilitarLibro(String id) throws ErrorServicio {
 
         Optional<Libro> respuesta = repositorioLibro.findById(id);
 
-        if (respuesta.isPresent() && respuesta.get().getAlta() == Boolean.TRUE) {
+        if (respuesta.isPresent() && respuesta.get().getAlta() == true) {
             Libro libro = respuesta.get();
-            libro.setAlta(Boolean.FALSE);
+            libro.setAlta(false);
             repositorioLibro.save(libro);
         } else {
             throw new ErrorServicio("El id ingresado no corresponde a un libro registrado o el libro ya se encuentra deshabilitado");
@@ -107,9 +96,9 @@ public class LibroServicio {
 
         Optional<Libro> respuesta = repositorioLibro.findById(id);
 
-        if (respuesta.isPresent() && respuesta.get().getAlta() == Boolean.FALSE) {
+        if (respuesta.isPresent() && respuesta.get().getAlta() == false) {
             Libro libro = respuesta.get();
-            libro.setAlta(Boolean.TRUE);
+            libro.setAlta(true);
             repositorioLibro.save(libro);
         } else {
             throw new ErrorServicio("El id ingresado no corresponde a un libro registrado o el libro no se encuentra deshabilitado");
@@ -155,6 +144,7 @@ public class LibroServicio {
 
     }
 
+    @Transactional(readOnly = true)
     public List<Libro> buscarLibroPorNombre(String nombre) throws ErrorServicio {
 
         if (nombre == null || nombre.trim().isEmpty()) {
@@ -170,6 +160,7 @@ public class LibroServicio {
         }
     }
 
+    @Transactional(readOnly = true)
     public Libro buscarLibroPorIsbn(Long isbn) throws ErrorServicio {
 
         if (isbn.toString().length() < 13 || isbn == null) {
@@ -185,6 +176,7 @@ public class LibroServicio {
         }
     }
 
+    @Transactional(readOnly = true)
     public List<Libro> buscarLibroPorAutor(Autor autor) throws ErrorServicio {
 
         if (autor == null) {
@@ -200,6 +192,7 @@ public class LibroServicio {
         }
     }
 
+    @Transactional(readOnly = true)
     public List<Libro> buscarLibroPorEditorial(Editorial editorial) throws ErrorServicio {
 
         if (editorial == null) {
@@ -215,6 +208,7 @@ public class LibroServicio {
         }
     }
 
+    @Transactional(readOnly = true)
     public Libro buscarLibrosPorId (String id) throws ErrorServicio {
         
         if(id == null || id.trim().isEmpty()) {
@@ -230,6 +224,7 @@ public class LibroServicio {
         }
     }
     
+    @Transactional(readOnly = true)
     public List<Libro> listarTodosLosLibros() throws ErrorServicio {
         
         List<Libro> libros = repositorioLibro.listarLibros();

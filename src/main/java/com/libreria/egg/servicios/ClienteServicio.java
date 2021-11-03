@@ -8,6 +8,7 @@ import java.util.Optional;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 
 @Service
 public class ClienteServicio {
@@ -15,7 +16,7 @@ public class ClienteServicio {
     @Autowired
     private RepositorioCliente repositorioCliente;
 
-    @Transactional
+    @Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class ) //Estos atributos con sus valores son los que vienen por defecto con la anotacion
     public void registrarCliente(Long documento, String nombre, String apellido, String telefono, Boolean alta) throws ErrorServicio {
 
         validarDatos(documento, nombre, apellido, telefono, alta);
@@ -52,27 +53,15 @@ public class ClienteServicio {
         }
     }
 
-    @Transactional
-    public void eliminarCliente(String id) throws ErrorServicio {
-
-        Optional<Cliente> respuesta = repositorioCliente.findById(id);
-
-        if (respuesta.isPresent()) {
-
-            repositorioCliente.save(respuesta.get());
-        } else {
-            throw new ErrorServicio("El Id ingresado no corresponde a un cliente registrado");
-        }
-    }
 
     @Transactional
     public void deshabilitarCliente(String id) throws ErrorServicio {
 
         Optional<Cliente> respuesta = repositorioCliente.findById(id);
 
-        if (respuesta.isPresent() && respuesta.get().getAlta() == Boolean.TRUE) {
+        if (respuesta.isPresent() && respuesta.get().getAlta() == true) {
             Cliente cliente = respuesta.get();
-            cliente.setAlta(Boolean.FALSE);
+            cliente.setAlta(false);
             repositorioCliente.save(respuesta.get());
         } else {
             throw new ErrorServicio("El Id ingresado no corresponde a un cliente registrado o el cliente ya se encuentra deshabilidato");
@@ -84,9 +73,9 @@ public class ClienteServicio {
 
         Optional<Cliente> respuesta = repositorioCliente.findById(id);
 
-        if (respuesta.isPresent() && respuesta.get().getAlta() == Boolean.FALSE) {
+        if (respuesta.isPresent() && respuesta.get().getAlta() == false) {
             Cliente cliente = respuesta.get();
-            cliente.setAlta(Boolean.TRUE);
+            cliente.setAlta(true);
             repositorioCliente.save(respuesta.get());
         } else {
             throw new ErrorServicio("El Id ingresado no corresponde a un cliente registrado o el cliente ya se encuentra habilidato");
@@ -112,6 +101,7 @@ public class ClienteServicio {
         }
     }
 
+    @Transactional(readOnly = true)
     public List<Cliente> buscarClientePorNombre(String nombre) throws ErrorServicio {
 
         if (nombre == null || nombre.trim().isEmpty()) {
@@ -127,6 +117,7 @@ public class ClienteServicio {
         }
     }
 
+    @Transactional(readOnly = true)
     public List<Cliente> buscarClientePorApellido(String apellido) throws ErrorServicio {
 
         if (apellido == null || apellido.trim().isEmpty()) {
@@ -142,6 +133,7 @@ public class ClienteServicio {
         }
     }
 
+    @Transactional(readOnly = true)
     public List<Cliente> buscarClientePorTelefono(String telefono) throws ErrorServicio {
 
         if (telefono == null || telefono.trim().isEmpty()) {
@@ -157,6 +149,7 @@ public class ClienteServicio {
         }
     }
 
+    @Transactional(readOnly = true)
     public Cliente buscarClientePorDocumento(Long documento) throws ErrorServicio {
 
         if (documento == null || documento < 0) {
@@ -172,6 +165,7 @@ public class ClienteServicio {
         }
     }
 
+    @Transactional(readOnly = true)
     public List<Cliente> listarTodosLosClientesActivos() throws ErrorServicio {
 
         List<Cliente> clientes = repositorioCliente.listarTodosLosClientesActivos();

@@ -27,7 +27,7 @@ public class Prestamo {
     Boolean alta;
     
     @OneToOne
-    Libro Libro;
+    Libro libro;
     
     @OneToOne
     Cliente cliente;
@@ -68,11 +68,11 @@ public class Prestamo {
     }
 
     public Libro getLibro() {
-        return Libro;
+        return libro;
     }
 
     public void setLibro(Libro Libro) {
-        this.Libro = Libro;
+        this.libro = Libro;
     }
 
     public Cliente getCliente() {

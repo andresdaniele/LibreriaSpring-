@@ -65,27 +65,16 @@ public class PrestamoServicio {
 
         Optional<Prestamo> respuesta = repositorioPrestamo.findById(id);
 
-        if (respuesta.isPresent() && respuesta.get().getAlta() == Boolean.TRUE) {
+        if (respuesta.isPresent() && respuesta.get().getAlta() == true) {
             Prestamo prestamo = respuesta.get();
-            prestamo.setAlta(Boolean.FALSE);
+            prestamo.setAlta(false);
             repositorioPrestamo.save(prestamo);
         } else {
             throw new ErrorServicio("El Id ingresado no pertenece a un prestamo registrado");
         }
     }
 
-    @Transactional
-    public void eliminarPrestamo(String id) throws ErrorServicio {
-
-        Optional<Prestamo> respuesta = repositorioPrestamo.findById(id);
-
-        if (respuesta.isPresent()) {
-            repositorioPrestamo.delete(respuesta.get());
-        } else {
-            throw new ErrorServicio("El Id ingresado no pertenece a un prestamo registrado");
-        }
-    }
-
+    
     private void validarDatos(Date fechaPrestamo, Date fechaDevolucion, Boolean alta, Libro libro, Cliente cliente) throws ErrorServicio {
 
         if (fechaPrestamo.before(new Date()) || fechaPrestamo == null) {
@@ -111,6 +100,7 @@ public class PrestamoServicio {
         }
     }
 
+    @Transactional(readOnly = true)
     public List<Prestamo> listarPrestamosCliente(Cliente cliente) throws ErrorServicio {
 
         if (cliente == null) {
@@ -126,6 +116,7 @@ public class PrestamoServicio {
         }
     }
 
+    @Transactional(readOnly = true)
     public List<Prestamo> listarPrestamosLibro(Libro libro) throws ErrorServicio {
 
         if (libro == null) {
@@ -141,6 +132,7 @@ public class PrestamoServicio {
         }
     }
 
+    @Transactional(readOnly = true)
     public List<Prestamo> listarTodosLosPrestamosActivos() throws ErrorServicio {
 
         List<Prestamo> prestamosActivos = repositorioPrestamo.listarTodosLosPrestamosActivos();
