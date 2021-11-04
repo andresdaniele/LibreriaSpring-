@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/libro.html")
 public class LibroControlador {
 
-    @GetMapping("/")
+    @GetMapping("/index.html")
     public String index() {
         return "index.html";
     }
