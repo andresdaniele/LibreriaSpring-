@@ -7,33 +7,35 @@ import java.util.List;
 import java.util.Optional;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
+@Service
 public class EditorialServicio {
 
     @Autowired
     private RepositorioEditorial repositorioEditorial;
 
     @Transactional
-    public void ingresarEditorial(String nombre, Boolean alta) throws ErrorServicio {
+    public void ingresarEditorial(String nombre) throws ErrorServicio {
 
-        validarDatos(nombre, alta);
+        validarDatos(nombre);
 
         Editorial editorial = new Editorial();
         editorial.setNombre(nombre);
-        editorial.setAlta(alta);
+        editorial.setAlta(true);
         repositorioEditorial.save(editorial);
     }
 
     @Transactional
-    public void modificarEditorial(String id, String nombre, Boolean alta) throws ErrorServicio {
+    public void modificarEditorial(String id, String nombre) throws ErrorServicio {
 
-        validarDatos(nombre, alta);
+        validarDatos(nombre);
 
         Optional<Editorial> respuesta = repositorioEditorial.findById(id);
         if (respuesta.isPresent()) {
             Editorial editorial = respuesta.get();
             editorial.setNombre(nombre);
-            editorial.setAlta(alta);
+            editorial.setAlta(true);
 
             repositorioEditorial.save(editorial);
         } else {
@@ -70,14 +72,10 @@ public class EditorialServicio {
         }
     }
 
-    private void validarDatos(String nombre, Boolean alta) throws ErrorServicio {
+    private void validarDatos(String nombre) throws ErrorServicio {
 
         if (nombre.trim().isEmpty() || nombre == null) {
             throw new ErrorServicio("El nombre no puede ser nulo");
-        }
-
-        if (alta == null) {
-            throw new ErrorServicio("El valor de alta no puede ser nulo");
         }
     }
 

@@ -32,19 +32,18 @@ public class LibroServicio {
     private RepositorioEditorial repositorioEditorial;
 
     @Transactional
-    public void ingresarLibro(Long isbn, String nombre, Integer anio, Integer ejemplares, Integer ejemplaresPrestados,
-            Boolean alta, String idAutor, String idEditorial) throws ErrorServicio {
+    public void ingresarLibro(Long isbn, String nombre, Integer anio, Integer ejemplares, String idAutor, String idEditorial) throws ErrorServicio {
 
-        validarDatos(isbn, nombre, anio, ejemplares, ejemplaresPrestados, alta, idAutor, idEditorial);
+        validarDatos(isbn, nombre, anio, ejemplares, idAutor, idEditorial);
 
         Libro libro = new Libro();
         libro.setIsbn(isbn);
         libro.setNombre(nombre);
         libro.setAnio(anio);
         libro.setEjemplares(ejemplares);
-        libro.setEjemplaresPrestados(ejemplaresPrestados);
-        libro.setEjemplaresRestantes(ejemplares - ejemplaresPrestados);
-        libro.setAlta(alta);
+        libro.setEjemplaresPrestados(0);
+        libro.setEjemplaresRestantes(0);
+        libro.setAlta(true);
         libro.setAutor(repositorioAutor.findById(idAutor).get());
         libro.setEditorial(repositorioEditorial.findById(idEditorial).get());
 
@@ -56,7 +55,7 @@ public class LibroServicio {
     public void modificarLibro(String id, Long isbn, String nombre, Integer anio, Integer ejemplares, Integer ejemplaresPrestados,
             Boolean alta, String idAutor, String idEditorial) throws ErrorServicio {
 
-        validarDatos(isbn, nombre, anio, ejemplares, ejemplaresPrestados, alta, idAutor, idEditorial);
+        validarDatos(isbn, nombre, anio, ejemplares, idAutor, idEditorial);
 
         Optional<Libro> respuesta = repositorioLibro.findById(id);
 
@@ -75,7 +74,6 @@ public class LibroServicio {
             throw new ErrorServicio("El id ingresado no corresponde a un libro registrado");
         }
     }
-
 
     @Transactional
     public void deshabilitarLibro(String id) throws ErrorServicio {
@@ -105,8 +103,7 @@ public class LibroServicio {
         }
     }
 
-    private void validarDatos(Long isbn, String nombre, Integer anio, Integer ejemplares, Integer ejemplaresPrestados,
-            Boolean alta, String idAutor, String idEditorial) throws ErrorServicio {
+    private void validarDatos(Long isbn, String nombre, Integer anio, Integer ejemplares, String idAutor, String idEditorial) throws ErrorServicio {
 
         if (isbn == null || isbn.toString().length() != 13) {
             throw new ErrorServicio("El ISBN debe tener 13 caracteres");
@@ -122,14 +119,6 @@ public class LibroServicio {
 
         if (ejemplares == null || ejemplares < 0) {
             throw new ErrorServicio("El numero de ejemplares no puede ser menor a cero");
-        }
-
-        if (ejemplaresPrestados == null || ejemplaresPrestados > ejemplares) {
-            throw new ErrorServicio("El numero de ejemplares prestados no puede ser mayor al existente");
-        }
-
-        if (alta == null) {
-            throw new ErrorServicio("El valor de alta no puede ser nulo");
         }
 
         Optional<Autor> respuestaAutor = repositorioAutor.findById(idAutor);
@@ -209,30 +198,30 @@ public class LibroServicio {
     }
 
     @Transactional(readOnly = true)
-    public Libro buscarLibrosPorId (String id) throws ErrorServicio {
-        
-        if(id == null || id.trim().isEmpty()) {
+    public Libro buscarLibrosPorId(String id) throws ErrorServicio {
+
+        if (id == null || id.trim().isEmpty()) {
             throw new ErrorServicio("El Id ingresado no puede ser nulo o vacio");
         }
-        
+
         Optional<Libro> libro = repositorioLibro.findById(id);
-        
-        if(libro.isPresent()){
+
+        if (libro.isPresent()) {
             return libro.get();
         } else {
             throw new ErrorServicio("El Id no corresponde a un libro registrado");
         }
     }
-    
+
     @Transactional(readOnly = true)
     public List<Libro> listarTodosLosLibros() throws ErrorServicio {
-        
+
         List<Libro> libros = repositorioLibro.listarLibros();
-        
-        if(libros.isEmpty()) {
+
+        if (libros.isEmpty()) {
             throw new ErrorServicio("Aun no hay libro registrados en el sistema");
         } else {
             return libros;
-        }               
+        }
     }
 }

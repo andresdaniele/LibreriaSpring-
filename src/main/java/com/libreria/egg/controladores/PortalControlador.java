@@ -10,21 +10,14 @@ public class PortalControlador {
 
     @GetMapping("/")
     public String index() {
-        return "index.html";
+        return "index";
     }
 
-    @GetMapping("/libro.html")
-    public String libro() {
-        return "libro.html";
-    }
-
-    @GetMapping("/autor.html")
-    public String autor() {
-        return "autor.html";
-    }
-
-    @GetMapping("/editorial.html")
+    @GetMapping("/editorial")
     public String editorial() {
-        return "editorial.html";
+        return "editorial";
     }
+    
+    
+
 }

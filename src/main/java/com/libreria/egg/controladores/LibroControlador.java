@@ -1,35 +1,39 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.libreria.egg.controladores;
 
+import com.libreria.egg.servicios.LibroServicio;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
-@RequestMapping("/libro.html")
+@RequestMapping("/libro")
 public class LibroControlador {
 
-    @GetMapping("/index.html")
-    public String index() {
-        return "index.html";
+    @Autowired
+    private LibroServicio libroServicio;
+
+    @GetMapping("/cargar")
+    public String cargar() {
+        return "cargarLibro";
     }
 
-    @GetMapping("/libro.html")
-    public String libro() {
-        return "libro.html";
-    }
+    @PostMapping("/cargar")
+    public String cargarLibro(ModelMap modelo, @RequestParam Long isbn, @RequestParam String nombre, @RequestParam Integer anio,
+            @RequestParam Integer ejemplares, @RequestParam String idAutor, @RequestParam String idEditorial) throws Exception {
 
-    @GetMapping("/autor.html")
-    public String autor() {
-        return "autor.html";
-    }
+        try {
+            libroServicio.ingresarLibro(isbn, nombre, anio, ejemplares, idAutor, idEditorial);
+            modelo.put("exito", "Carga Exitosa");
+            return "cargarLibro";
+            
+        } catch (Exception e) {           
+            modelo.put("error", "Falto algun dato");
+            return "cargarLibro";
+        }
 
-    @GetMapping("/editorial.html")
-    public String editorial() {
-        return "editorial.html";
     }
 }
