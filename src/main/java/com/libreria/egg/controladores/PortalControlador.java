@@ -17,7 +17,10 @@ public class PortalControlador {
     public String editorial() {
         return "editorial";
     }
-    
-    
+
+    @GetMapping("/autor")
+    public String autor() {
+        return "autor";
+    }
 
 }

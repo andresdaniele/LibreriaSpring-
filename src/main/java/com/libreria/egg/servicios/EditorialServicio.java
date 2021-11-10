@@ -59,7 +59,7 @@ public class EditorialServicio {
     }
 
     @Transactional
-    public void habilitarAutor(String id) throws ErrorServicio {
+    public void habilitarEditorial(String id) throws ErrorServicio {
 
         Optional<Editorial> respuesta = repositorioEditorial.findById(id);
 
@@ -103,11 +103,11 @@ public class EditorialServicio {
         }
 
         Optional<Editorial> editorial = repositorioEditorial.findById(id);
-
+        
         if (editorial.isPresent()) {
-            return editorial.get();
+            return editorial.get();          
         } else {
-            throw new ErrorServicio("El Id ingresado no corresponde a una editorial registrada");
+            throw new ErrorServicio("El Id ingresado no corresponde a una editorial registrada HOLA");
         }
     }
 

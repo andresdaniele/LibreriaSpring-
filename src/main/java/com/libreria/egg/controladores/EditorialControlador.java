@@ -6,6 +6,7 @@
 package com.libreria.egg.controladores;
 
 import com.libreria.egg.entidades.Editorial;
+import com.libreria.egg.errores.ErrorServicio;
 import com.libreria.egg.servicios.EditorialServicio;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,8 +38,9 @@ public class EditorialControlador {
             modelo.put("exito", "Carga Exitosa");
             return "cargarEditorial";
 
-        } catch (Exception e) {
-            modelo.put("error", "Falto algun dato");
+        } catch (ErrorServicio e) {
+            System.out.println(e.getMessage());
+            modelo.put("error", e.getMessage());
             return "cargarEditorial";
         }
 
@@ -51,22 +53,23 @@ public class EditorialControlador {
             List<Editorial> listaEditoriales = editorialServicio.listarTodasLasEditoriales();
             modelo.addAttribute("editoriales", listaEditoriales);
             return "listarEditorial";
-        } catch (Exception e) {
-            e.printStackTrace();
-            e.getMessage();
+        } catch (ErrorServicio e) {
+            System.out.println(e.getMessage());
             return "listarEditorial";
         }
 
     }
 
     @GetMapping("/editar/{id}")
-    public String editar(@PathVariable String id, ModelMap modelo) {
+    public String editar(ModelMap modelo, @PathVariable String id) {
         try {
-            modelo.put("editorial", editorialServicio.buscarEditoriaPorId(id));
+            Editorial editorial = editorialServicio.buscarEditoriaPorId(id);
+            modelo.put("editorial", editorial);
+
             return "editarEditorial";
 
-        } catch (Exception e) {
-            e.getMessage();
+        } catch (ErrorServicio e) {
+            System.out.println(e.getMessage());
             return "editarEditorial";
         }
     }
@@ -76,12 +79,41 @@ public class EditorialControlador {
 
         try {
             editorialServicio.modificarEditorial(id, nombre);
-            modelo.put("exito", "Modificacion exitosa");
+            modelo.put("exito", "Registro exitoso");
 
-           return "listarEditorial";
-        } catch (Exception e) {
-            modelo.put("error", "Falto algun dato");
+            return "listarEditorial";
+
+        } catch (ErrorServicio e) {
+            System.out.println(e.getMessage());
+            e.printStackTrace();
+            modelo.put("error", "Falto algun dato");;
             return "editarEditorial";
         }
+    }
+
+    @GetMapping("/baja/{id}")
+    public String darDeBajaEditorial(@PathVariable String id) {
+
+        try {
+            editorialServicio.deshabilitarEditorial(id);
+            return "redirect:/editorial/listar";
+        } catch (ErrorServicio e) {
+            System.out.println(e.getMessage());
+            return "redirect:/editorial/listar";
+        }
+
+    }
+
+    @GetMapping("/alta/{id}")
+    public String darDeAltaEditorial(@PathVariable String id) {
+
+        try {
+            editorialServicio.habilitarEditorial(id);
+            return "redirect:/editorial/listar";
+        } catch (ErrorServicio e) {
+            System.out.println(e.getMessage());
+            return "redirect:/editorial/listar";
+        }
+
     }
 }

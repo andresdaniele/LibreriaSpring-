@@ -16,26 +16,26 @@ public class AutorServicio {
     private RepositorioAutor repositorioAutor;
 
     @Transactional
-    public void ingresarAutor(String nombre, Boolean alta) throws ErrorServicio {
+    public void ingresarAutor(String nombre) throws ErrorServicio {
 
-        validarDatos(nombre, alta);
+        validarDatos(nombre);
 
         Autor autor = new Autor();
         autor.setNombre(nombre);
-        autor.setAlta(alta);
+        autor.setAlta(true);
         repositorioAutor.save(autor);
     }
 
     @Transactional
-    public void modificarAutor(String id, String nombre, Boolean alta) throws ErrorServicio {
+    public void modificarAutor(String id, String nombre) throws ErrorServicio {
 
-        validarDatos(nombre, alta);
+        validarDatos(nombre);
 
         Optional<Autor> respuesta = repositorioAutor.findById(id);
         if (respuesta.isPresent()) {
             Autor autor = respuesta.get();
             autor.setNombre(nombre);
-            autor.setAlta(alta);
+            autor.setAlta(true);
 
             repositorioAutor.save(autor);
         } else {
@@ -71,15 +71,12 @@ public class AutorServicio {
         }
     }
 
-    private void validarDatos(String nombre, Boolean alta) throws ErrorServicio {
+    private void validarDatos(String nombre) throws ErrorServicio {
 
         if (nombre.trim().isEmpty() || nombre == null) {
             throw new ErrorServicio("El nombre no puede ser nulo");
         }
 
-        if (alta == null) {
-            throw new ErrorServicio("El valor de alta no puede ser nulo");
-        }
     }
 
     @Transactional(readOnly = true)
