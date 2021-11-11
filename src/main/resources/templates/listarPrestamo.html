@@ -10,7 +10,7 @@
         integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css"
         integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous" />
-    <title>Listar Libros</title>
+    <title>Gestionar Prestamos</title>
 </head>
 
 <body>
@@ -64,50 +64,48 @@
             <table class="table table-hover">
                 <thead>
                     <tr class="text-center align-middle">
-                        <th scope="col">ISNB</th>
-                        <th scope="col">Nombre</th>
-                        <th scope="col">Autor</th>
-                        <th scope="col">Editorial</th>
-                        <th scope="col">Año de Publicacion</th>
-                        <th scope="col">Ejemplares Totales</th>
-                        <th scope="col">Ejemplares Disponibles</th>
-                        <th scope="col">Ejemplares Prestados</th>
+                        <th scope="col">ID</th>
+                        <th scope="col">Fecha Prestamo</th>
+                        <th scope="col">Fecha Devolucion</th>
+                        <th scope="col">Cliente</th>
+                        <th scope="col">Libro</th>
                         <th scope="col">Editar</th>
                         <th scope="col">Estado</th>
                     </tr>
                 </thead>
-                <tbody th:each="libro : ${libros}">
+                <tbody th:each="prestamo : ${prestamos}">
 
                     <tr class="text-center align-middle">
-                        <td th:text="${libro.isbn}"></td>
-                        <td th:text="${libro.nombre}"></td>
-                        <td th:text="${libro.autor.nombre}"></td>
-                        <td th:text="${libro.editorial.nombre}"></td>
-                        <td th:text="${libro.anio}"></td>
-                        <td th:text="${libro.ejemplares}"></td>
-                        <td th:text="${libro.ejemplaresRestantes}"></td>
-                        <td th:text="${libro.ejemplaresPrestados}"></td>
+                        <td th:text="${prestamo.id}"></td>
+                        <td th:text="${prestamo.fechaPrestamo}"></td>
+                        <td th:text="${prestamo.fechaDevolucion}"></td>
+                        <td th:text="${prestamo.cliente.nombre} + ' ' + ${prestamo.cliente.apellido}"></td>
+                        <td th:text="${prestamo.libro.nombre}"></td>
 
-                        <td><a th:href="@{/libro/editar/__${libro.id}__}"><button type="button"
-                                    class="btn btn-primary">Editar</button></a></td>
+                        <td>
+                            <a th:href="@{/prestamo/editar/__${prestamo.id}__}">
+                                <button type="button" class="btn btn-outline-primary">Editar</button>
+                            </a>
+                        </td>
 
                         <td class="text-center">
-                            <i th:if="${libro.alta}" class="fa fa-circle text-success "></i>
-                            <div th:if="${libro.alta}">Activo</div>
-                            <i th:unless="${libro.alta}" class="fa fa-circle circulo" style="color:red;"></i>
-                            <div th:unless="${libro.alta}">Inactivo</div>
+                            <i th:if="${prestamo.alta}" class="fa fa-circle text-success"></i>
+                            <div th:if="${prestamo.alta}">En curso</div>
+                            <i th:unless="${prestamo.alta}" class="fa fa-circle estado"></i>
+                            <div th:unless="${prestamo.alta}">Devuelto</div>
                         </td>
-                        <td>
-                            <a th:if="${libro.alta}" th:href="@{/libro/baja/__${libro.id}__}"><button type="button"
-                                    class="btn btn-danger btn-sm">Dar de Baja</button></a>
-                            <a th:unless="${libro.alta}" th:href="@{/libro/alta/__${libro.id}__}"><button type="button"
-                                    class="btn btn-success btn-sm">Dar de Alta</button></a>
+
+                        <td th:if="${prestamo.alta}">
+                            <a th:href="@{/prestamo/devolucion/__${prestamo.id}__}">
+                                <button type="button" class="btn btn-warning">Devolver</button>
+                            </a>
                         </td>
+
                     </tr>
                 </tbody>
             </table>
 
-            <a href="/libro"><button type="button" class="btn btn-secondary m-2">Volver</button></a>
+            <a href="/prestamo"><button type="button" class="btn btn-secondary m-2">Volver</button></a>
 
         </div>
 

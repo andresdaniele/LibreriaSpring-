@@ -103,9 +103,9 @@ public class EditorialServicio {
         }
 
         Optional<Editorial> editorial = repositorioEditorial.findById(id);
-        
+
         if (editorial.isPresent()) {
-            return editorial.get();          
+            return editorial.get();
         } else {
             throw new ErrorServicio("El Id ingresado no corresponde a una editorial registrada HOLA");
         }
@@ -123,4 +123,15 @@ public class EditorialServicio {
         }
     }
 
+    @Transactional(readOnly = true)
+    public List<Editorial> listarTodasLasEditorialesActivas() throws ErrorServicio {
+
+        List<Editorial> editoriales = repositorioEditorial.listarEditorialesActivas();
+
+        if (editoriales.isEmpty()) {
+            throw new ErrorServicio("Aun no hay editoriales registradas");
+        } else {
+            return editoriales;
+        }
+    }
 }

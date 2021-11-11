@@ -23,4 +23,7 @@ public interface RepositorioCliente extends JpaRepository<Cliente, String> {
     @Query("SELECT c FROM Cliente c WHERE alta = true ORDER BY c.apellido ASC")
     public List<Cliente> listarTodosLosClientesActivos();
 
+    @Query("SELECT c FROM Cliente c ORDER BY c.apellido ASC")
+    public List<Cliente> listarTodosLosClientes();
+
 }

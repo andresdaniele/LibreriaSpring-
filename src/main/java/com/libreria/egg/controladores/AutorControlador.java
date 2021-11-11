@@ -75,4 +75,31 @@ public class AutorControlador {
         }
     }
 
+    @GetMapping("/editar/{id}")
+    public String editarAutor(ModelMap modelo, @PathVariable String id) {
+
+        try {           
+            modelo.put("autor", autorServicio.buscarAutorPorId(id));
+            return "editarAutor";
+
+        } catch (ErrorServicio e) {
+            System.out.println(e.getMessage());
+            return "editarAutor";
+        }
+    }
+
+    @PostMapping("/editar/{id}")
+    public String editarAutor(ModelMap modelo, @PathVariable String id, @RequestParam String nombre) {
+        try {
+            
+            autorServicio.modificarAutor(id, nombre);
+            modelo.put("exito", "Modificacion exitosa");
+            
+            return "listarAutor";
+            
+        } catch (ErrorServicio e) {
+            modelo.put("error", e.getMessage());
+            return "editarAutor";
+        }
+    }
 }

@@ -15,4 +15,7 @@ public interface RepositorioEditorial extends JpaRepository<Editorial, String> {
 
     @Query("SELECT e FROM Editorial e ORDER BY e.nombre ASC ")
     public List<Editorial> listarEditoriales();
+
+    @Query("SELECT e FROM Editorial e WHERE e.alta = true ORDER BY e.nombre ASC ")
+    public List<Editorial> listarEditorialesActivas();
 }

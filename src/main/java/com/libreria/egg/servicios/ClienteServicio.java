@@ -16,25 +16,25 @@ public class ClienteServicio {
     @Autowired
     private RepositorioCliente repositorioCliente;
 
-    @Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class ) //Estos atributos con sus valores son los que vienen por defecto con la anotacion
-    public void registrarCliente(Long documento, String nombre, String apellido, String telefono, Boolean alta) throws ErrorServicio {
+    @Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class) //Estos atributos con sus valores son los que vienen por defecto con la anotacion
+    public void registrarCliente(Long documento, String nombre, String apellido, String telefono) throws ErrorServicio {
 
-        validarDatos(documento, nombre, apellido, telefono, alta);
+        validarDatos(documento, nombre, apellido, telefono);
 
         Cliente cliente = new Cliente();
         cliente.setDocumento(documento);
         cliente.setNombre(nombre);
         cliente.setApellido(apellido);;
         cliente.setTelefono(telefono);
-        cliente.setAlta(alta);
+        cliente.setAlta(true);
 
         repositorioCliente.save(cliente);
     }
 
     @Transactional
-    public void modificarCliente(String id, Long documento, String nombre, String apellido, String telefono, Boolean alta) throws ErrorServicio {
+    public void modificarCliente(String id, Long documento, String nombre, String apellido, String telefono) throws ErrorServicio {
 
-        validarDatos(documento, nombre, apellido, telefono, alta);
+        validarDatos(documento, nombre, apellido, telefono);
 
         Optional<Cliente> respuesta = repositorioCliente.findById(id);
 
@@ -45,14 +45,13 @@ public class ClienteServicio {
             cliente.setNombre(nombre);
             cliente.setApellido(apellido);;
             cliente.setTelefono(telefono);
-            cliente.setAlta(alta);
+            cliente.setAlta(true);
 
             repositorioCliente.save(cliente);
         } else {
             throw new ErrorServicio("El Id ingresado no corresponde a un cliente registrado");
         }
     }
-
 
     @Transactional
     public void deshabilitarCliente(String id) throws ErrorServicio {
@@ -82,7 +81,7 @@ public class ClienteServicio {
         }
     }
 
-    private void validarDatos(Long documento, String nombre, String apellido, String telefono, Boolean alta) throws ErrorServicio {
+    private void validarDatos(Long documento, String nombre, String apellido, String telefono) throws ErrorServicio {
 
         if (documento == null || documento < 0) {
             throw new ErrorServicio("El documento ingresado no puede ser nulo o un numero negativo");
@@ -95,9 +94,6 @@ public class ClienteServicio {
         }
         if (telefono == null || telefono.trim().isEmpty()) {
             throw new ErrorServicio("El telefono ingresado no puede ser nulo o vacio");
-        }
-        if (alta == null) {
-            throw new ErrorServicio("El estado de alta no puede ser nulo");
         }
     }
 
@@ -166,9 +162,37 @@ public class ClienteServicio {
     }
 
     @Transactional(readOnly = true)
+    public Cliente buscarClientePorId(String id) throws ErrorServicio {
+
+        if (id == null || id.trim().isEmpty()) {
+            throw new ErrorServicio("El Id ingresado no puede ser nulo o vacio");
+        }
+
+        Optional<Cliente> cliente = repositorioCliente.findById(id);
+
+        if (cliente.isPresent()) {
+            return cliente.get();
+        } else {
+            throw new ErrorServicio("El Id no corresponde a un cliente registrado");
+        }
+    }
+
+    @Transactional(readOnly = true)
     public List<Cliente> listarTodosLosClientesActivos() throws ErrorServicio {
 
         List<Cliente> clientes = repositorioCliente.listarTodosLosClientesActivos();
+
+        if (clientes == null || clientes.isEmpty()) {
+            throw new ErrorServicio("No hay clientes activos registrados");
+        } else {
+            return clientes;
+        }
+    }
+
+    @Transactional(readOnly = true)
+    public List<Cliente> listarTodosLosClientes() throws ErrorServicio {
+
+        List<Cliente> clientes = repositorioCliente.listarTodosLosClientes();
 
         if (clientes == null || clientes.isEmpty()) {
             throw new ErrorServicio("No hay clientes activos registrados");

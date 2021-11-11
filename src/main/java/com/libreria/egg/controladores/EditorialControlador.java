@@ -79,7 +79,7 @@ public class EditorialControlador {
 
         try {
             editorialServicio.modificarEditorial(id, nombre);
-            modelo.put("exito", "Registro exitoso");
+            modelo.put("exito", "Modificacion exitosa");
 
             return "listarEditorial";
 

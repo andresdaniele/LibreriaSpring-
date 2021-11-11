@@ -42,7 +42,7 @@ public class LibroServicio {
         libro.setAnio(anio);
         libro.setEjemplares(ejemplares);
         libro.setEjemplaresPrestados(0);
-        libro.setEjemplaresRestantes(0);
+        libro.setEjemplaresRestantes(ejemplares);
         libro.setAlta(true);
         libro.setAutor(repositorioAutor.findById(idAutor).get());
         libro.setEditorial(repositorioEditorial.findById(idEditorial).get());
@@ -53,7 +53,7 @@ public class LibroServicio {
 
     @Transactional
     public void modificarLibro(String id, Long isbn, String nombre, Integer anio, Integer ejemplares, Integer ejemplaresPrestados,
-            Boolean alta, String idAutor, String idEditorial) throws ErrorServicio {
+            String idAutor, String idEditorial) throws ErrorServicio {
 
         validarDatos(isbn, nombre, anio, ejemplares, idAutor, idEditorial);
 
@@ -67,7 +67,7 @@ public class LibroServicio {
             libro.setEjemplares(ejemplares);
             libro.setEjemplaresPrestados(ejemplaresPrestados);
             libro.setEjemplaresRestantes(ejemplares - ejemplaresPrestados);
-            libro.setAlta(alta);
+            libro.setAlta(true);
             libro.setAutor(repositorioAutor.findById(idAutor).get());
             libro.setEditorial(repositorioEditorial.findById(idEditorial).get());
         } else {
@@ -113,7 +113,7 @@ public class LibroServicio {
             throw new ErrorServicio("El nombre el libro no puede ser nulo");
         }
 
-        if (anio > LocalDate.now().getYear() || anio == null) {
+        if (anio == null || anio > LocalDate.now().getYear()) {
             throw new ErrorServicio("El año del libro no puede ser nulo ni mayor al actual");
         }
 
@@ -217,6 +217,18 @@ public class LibroServicio {
     public List<Libro> listarTodosLosLibros() throws ErrorServicio {
 
         List<Libro> libros = repositorioLibro.listarLibros();
+
+        if (libros.isEmpty()) {
+            throw new ErrorServicio("Aun no hay libro registrados en el sistema");
+        } else {
+            return libros;
+        }
+    }
+
+    @Transactional(readOnly = true)
+    public List<Libro> listarTodosLosLibrosActivos() throws ErrorServicio {
+
+        List<Libro> libros = repositorioLibro.listarLibrosActivos();
 
         if (libros.isEmpty()) {
             throw new ErrorServicio("Aun no hay libro registrados en el sistema");

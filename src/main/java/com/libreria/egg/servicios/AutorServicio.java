@@ -122,4 +122,16 @@ public class AutorServicio {
             return autores;
         }
     }
+
+    @Transactional(readOnly = true)
+    public List<Autor> listarTodosLosAutoresActivos() throws ErrorServicio {
+
+        List<Autor> autores = repositorioAutor.listarAutores();
+
+        if (autores.isEmpty()) {
+            throw new ErrorServicio("Aun no hay autores registrados");
+        } else {
+            return autores;
+        }
+    }
 }

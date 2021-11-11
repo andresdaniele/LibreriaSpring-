@@ -15,4 +15,7 @@ public interface RepositorioAutor extends JpaRepository<Autor, String> {
 
     @Query("SELECT a FROM Autor a ORDER BY a.nombre ASC")
     public List<Autor> listarAutores();
+
+    @Query("SELECT a FROM Autor a WHERE a.alta = true ORDER BY a.nombre ASC")
+    public List<Autor> listarAutoresActivos();
 }

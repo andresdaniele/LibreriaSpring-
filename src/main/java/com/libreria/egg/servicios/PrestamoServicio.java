@@ -23,16 +23,25 @@ public class PrestamoServicio {
     private RepositorioLibro repositorioLibro;
     @Autowired
     private RepositorioCliente repositorioCliente;
+    @Autowired
+    private LibroServicio libroServicio;
 
     @Transactional
-    public void crearPrestamo(Date fechaPrestamo, Date fechaDevolucion, Boolean alta, Libro libro, Cliente cliente) throws ErrorServicio {
+    public void crearPrestamo(Date fechaDevolucion, Libro libro, Cliente cliente) throws ErrorServicio {
 
-        validarDatos(fechaPrestamo, fechaDevolucion, alta, libro, cliente);
+        validarDatos(fechaDevolucion, libro, cliente);
 
         Prestamo prestamo = new Prestamo();
-        prestamo.setFechaPrestamo(fechaPrestamo);
+        prestamo.setFechaPrestamo(new Date());
         prestamo.setFechaDevolucion(fechaDevolucion);
-        prestamo.setAlta(alta);
+        prestamo.setAlta(true);
+
+        if (libro.getEjemplaresRestantes() == 0) {
+            throw new ErrorServicio("El libro no posee ejemplares disponibles para prestamo");
+        } else {
+            libro.setEjemplaresPrestados(libro.getEjemplaresPrestados() + 1);
+        }
+        libroServicio.modificarLibro(libro.getId(), libro.getIsbn(), libro.getNombre(), libro.getAnio(), libro.getEjemplares(), libro.getEjemplaresPrestados(), libro.getAutor().getId(), libro.getEditorial().getId());
         prestamo.setLibro(libro);
         prestamo.setCliente(cliente);
 
@@ -40,17 +49,17 @@ public class PrestamoServicio {
     }
 
     @Transactional
-    public void modificarPrestamo(String id, Date fechaPrestamo, Date fechaDevolucion, Boolean alta, Libro libro, Cliente cliente) throws ErrorServicio {
+    public void modificarPrestamo(String id,Date fechaDevolucion, Libro libro, Cliente cliente) throws ErrorServicio {
 
-        validarDatos(fechaPrestamo, fechaDevolucion, alta, libro, cliente);
+        validarDatos(fechaDevolucion, libro, cliente);
 
         Optional<Prestamo> respuesta = repositorioPrestamo.findById(id);
 
         if (respuesta.isPresent()) {
             Prestamo prestamo = respuesta.get();
-            prestamo.setFechaPrestamo(fechaPrestamo);
+            prestamo.setFechaPrestamo(respuesta.get().getFechaPrestamo());
             prestamo.setFechaDevolucion(fechaDevolucion);
-            prestamo.setAlta(alta);
+            prestamo.setAlta(true);
             prestamo.setLibro(libro);
             prestamo.setCliente(cliente);
 
@@ -61,32 +70,27 @@ public class PrestamoServicio {
     }
 
     @Transactional
-    public void darDeBajaPrestamo(String id) throws ErrorServicio {
+    public void devolucionLibro(String id) throws ErrorServicio {
 
         Optional<Prestamo> respuesta = repositorioPrestamo.findById(id);
 
         if (respuesta.isPresent() && respuesta.get().getAlta() == true) {
             Prestamo prestamo = respuesta.get();
             prestamo.setAlta(false);
+            
+            Libro libro = prestamo.getLibro();
+            libro.setEjemplaresPrestados(libro.getEjemplaresPrestados() - 1);
+            libroServicio.modificarLibro(libro.getId(), libro.getIsbn(), libro.getNombre(), libro.getAnio(), libro.getEjemplares(), libro.getEjemplaresPrestados(), libro.getAutor().getId(), libro.getEditorial().getId());
             repositorioPrestamo.save(prestamo);
         } else {
             throw new ErrorServicio("El Id ingresado no pertenece a un prestamo registrado");
         }
     }
 
-    
-    private void validarDatos(Date fechaPrestamo, Date fechaDevolucion, Boolean alta, Libro libro, Cliente cliente) throws ErrorServicio {
+    private void validarDatos(Date fechaDevolucion, Libro libro, Cliente cliente) throws ErrorServicio {
 
-        if (fechaPrestamo.before(new Date()) || fechaPrestamo == null) {
-            throw new ErrorServicio("La fecha de prestamo no puede ser nula o anterior a la de creacion");
-        }
-
-        if (fechaDevolucion.before(fechaPrestamo) || fechaDevolucion == null) {
+        if (fechaDevolucion.before(new Date()) || fechaDevolucion == null) {
             throw new ErrorServicio("La fecha de devolucion no puede ser nula o anterior a la fecha de prestamo ");
-        }
-
-        if (alta == null) {
-            throw new ErrorServicio("El estado de alta no puede ser nulo");
         }
 
         Optional<Libro> respuestaLibro = repositorioLibro.findById(libro.getId());
@@ -141,6 +145,18 @@ public class PrestamoServicio {
             throw new ErrorServicio("Aun no hay prestamos activos");
         } else {
             return prestamosActivos;
+        }
+    }
+
+    @Transactional(readOnly = true)
+    public List<Prestamo> listarTodosLosPrestamo() throws ErrorServicio {
+
+        List<Prestamo> prestamos = repositorioPrestamo.listarTodosLosPrestamos();
+
+        if (prestamos.isEmpty() || prestamos == null) {
+            throw new ErrorServicio("Aun no hay prestamos activos");
+        } else {
+            return prestamos;
         }
     }
 }
