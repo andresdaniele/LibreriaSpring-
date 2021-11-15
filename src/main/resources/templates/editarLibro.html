@@ -1,54 +1,61 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
-    <title>Editar Prestamo</title>
-</head>
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
+              integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+        <title>Editar Libro</title>
+    </head>
 
+    <body>
 
-<body>
-
-
-    <h1 class="text-muted display-6 container-fluid p-5">Editar Prestamo</h2>
+        <h1 class="text-muted display-6 container-fluid p-5">Editar Libro</h2>
 
         <form th:action="@{/libro/editar/__${libro.id}__}" class="container container-fluid" method="POST">
-
-            <input hidden th:value="${id}" name="id">
             <div class="mb-3">
-                <label class="h5 mb-3 form-label">Fecha Devolucion</label>
-                <input name="fechaDevolucion" type="date" th:value="${fechaDevolucion}" class="form-control"
-                    placeholder="Ingrese la fecha del devolucion">
+                <label class="h5 mb-3 form-label">ISNB</label>
+                <input name="isbn" type="number" th:value="${libro.isbn}" class="form-control" placeholder="Ingrese el ISNB del libro">
             </div>
             <div class="mb-3">
-                <label class="h5 mb-3 mt-2 form-label">Libro</label>
-                <select name="idLibro" class="form-control">
-                    <option th:each="libro : ${libros}" th:value="${libro.id}" th:text="${libro.nombre}"></option>
+                <label class="h5 mb-3 mt-2 form-label">Titulo</label>
+                <input name="nombre" type="text" th:value="${libro.nombre}" class="form-control" placeholder="Ingrese el titulo del libro">
+            </div>
+            <div class="mb-3">
+                <label class="h5 mb-3 mt-2 form-label">Autor</label>
+                <select name="idAutor" class="form-control">
+                    <option th:each="autor : ${autores}" th:value="${autor.id}" th:text="${autor.nombre}"></option>
                 </select>
             </div>
             <div class="mb-3">
-                <label class="h5 mb-3 mt-2 form-label">Cliente</label>
-                <select name="idCliente" class="form-control">
-                    <option th:each="cliente : ${clientes}" th:value="${cliente.id}" th:text="${cliente.nombre}">
-                    </option>
+                <label class="h5 mb-3 mt-2 form-label" >Editorial</label>
+                <select name="idEditorial" class="form-control">
+                    <option th:each="editorial : ${editoriales}" th:value="${editorial.id}" th:text="${editorial.nombre}"></option>
                 </select>
+            </div>
+            <div class="mb-3">
+                <label class="h5 mb-3 mt-2 form-label">Año de publicacion</label>
+                <input name="anio" type="number" th:value="${libro.anio}" class="form-control" placeholder="Ingrese el año de publicacion del libro">
+            </div>
+            <div class="mb-3">
+                <label class="h5 mb-3 mt-2 form-label">Ejemplares Totales</label>
+                <input name="ejemplares" type="number" th:value="${libro.ejemplares}" class="form-control" placeholder="Ingrese los ejemplares disponibles del libro">
             </div>
             <div class="d-flex flex-row-reverse mt-4">
                 <button type="submit" class="btn btn-primary m-2">Guardar</button>
-                <a th:href="@{/prestamo}"><button type="button" class="btn btn-secondary m-2">Volver</button></a>
+                <a th:href="@{/libro/listar}"><button type="button" class="btn btn-secondary m-2">Volver</button></a>
             </div>
         </form>
+    </form>
 
-        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"
             integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p"
-            crossorigin="anonymous"></script>
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"
+    crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"
             integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF"
-            crossorigin="anonymous"></script>
+    crossorigin="anonymous"></script>
 </body>
 
 </html>

@@ -49,14 +49,15 @@ public class PrestamoServicio {
     }
 
     @Transactional
-    public void modificarPrestamo(String id,Date fechaDevolucion, Libro libro, Cliente cliente) throws ErrorServicio {
-
+    public void modificarPrestamo(String id, Date fechaDevolucion, Libro libro, Cliente cliente) throws ErrorServicio {
+        System.out.println(id);
         validarDatos(fechaDevolucion, libro, cliente);
 
         Optional<Prestamo> respuesta = repositorioPrestamo.findById(id);
 
         if (respuesta.isPresent()) {
             Prestamo prestamo = respuesta.get();
+            System.out.println(prestamo.getId());
             prestamo.setFechaPrestamo(respuesta.get().getFechaPrestamo());
             prestamo.setFechaDevolucion(fechaDevolucion);
             prestamo.setAlta(true);
@@ -77,7 +78,7 @@ public class PrestamoServicio {
         if (respuesta.isPresent() && respuesta.get().getAlta() == true) {
             Prestamo prestamo = respuesta.get();
             prestamo.setAlta(false);
-            
+
             Libro libro = prestamo.getLibro();
             libro.setEjemplaresPrestados(libro.getEjemplaresPrestados() - 1);
             libroServicio.modificarLibro(libro.getId(), libro.getIsbn(), libro.getNombre(), libro.getAnio(), libro.getEjemplares(), libro.getEjemplaresPrestados(), libro.getAutor().getId(), libro.getEditorial().getId());
@@ -157,6 +158,22 @@ public class PrestamoServicio {
             throw new ErrorServicio("Aun no hay prestamos activos");
         } else {
             return prestamos;
+        }
+    }
+
+    @Transactional(readOnly = true)
+    public Prestamo buscarPrestamosPorId(String id) throws ErrorServicio {
+
+        if (id == null || id.trim().isEmpty()) {
+            throw new ErrorServicio("El Id ingresado no puede ser nulo o vacio");
+        }
+
+        Optional<Prestamo> prestamo = repositorioPrestamo.findById(id);
+
+        if (prestamo.isPresent()) {
+            return prestamo.get();
+        } else {
+            throw new ErrorServicio("El Id no corresponde a un prestamo registrado");
         }
     }
 }

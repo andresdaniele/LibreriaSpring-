@@ -93,9 +93,8 @@ public class AutorControlador {
         try {
             
             autorServicio.modificarAutor(id, nombre);
-            modelo.put("exito", "Modificacion exitosa");
             
-            return "listarAutor";
+            return "redirect:/autor/listar";
             
         } catch (ErrorServicio e) {
             modelo.put("error", e.getMessage());

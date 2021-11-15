@@ -103,4 +103,38 @@ public class PrestamoControlador {
         }
     }
 
+    @GetMapping("editar/{id}")
+    public String editar(ModelMap modelo, @PathVariable String id) {
+        try {
+            modelo.addAttribute("prestamo", prestamoServicio.buscarPrestamosPorId(id));
+            modelo.addAttribute("libros", libroServicio.listarTodosLosLibrosActivos());
+            modelo.addAttribute("clientes", clienteServicio.listarTodosLosClientesActivos());
+            return "editarPrestamo";
+        } catch (ErrorServicio e) {
+            e.printStackTrace();
+            System.out.println(e.getMessage());
+            return "editarPrestamo";
+        }
+
+    }
+
+    @PostMapping("/editar/{id}")
+    public String editarPrestamo(ModelMap modelo, @PathVariable String id, @RequestParam(value = "fechaDevolucion", required = false)
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date fechaDevolucion, @RequestParam(required = false) String idLibro,
+            @RequestParam(required = false) String idCliente) {
+
+        try {
+            prestamoServicio.modificarPrestamo(id, fechaDevolucion, libroServicio.buscarLibrosPorId(idLibro), clienteServicio.buscarClientePorId(idCliente));
+            return "redirect:/prestamo/listar";
+        } catch (ErrorServicio e) {
+            e.printStackTrace();
+            System.out.println(e.getMessage());
+            modelo.put("error", e.getMessage());
+            return "listarPrestamo";
+        }
+
+    }
+
+    
+
 }

@@ -26,7 +26,7 @@
         </div>
     </div>
 
-    <h1 class="text-muted display-6 container-fluid p-5">Editar Editorial</h2>
+    <h1 class="text-muted display-6 container-fluid p-5">Editar Cliente</h2>
 
         <form th:action="@{/cliente/editar/__${cliente.id}__}" class="container container-fluid" method="POST">
 
@@ -54,7 +54,7 @@
             </div>
             <div class="d-flex flex-row-reverse mt-4">
                 <button type="submit" class="btn btn-primary m-2">Guardar</button>
-                <a th:href="@{/autor/listar}"><button type="button" class="btn btn-secondary m-2">Volver</button></a>
+                <a th:href="@{/cliente/listar}"><button type="button" class="btn btn-secondary m-2">Volver</button></a>
             </div>
 
         </form>

@@ -82,6 +82,11 @@
                 <td th:text="${cliente.documento}" name="documento"></td>
                 <td th:text="${cliente.telefono}" name="telefono"></td>
 
+                <td>
+                    <a th:href="@{/cliente/editar/__${cliente.id}__}">
+                        <button type="button" class="btn btn-outline-primary">Editar</button>
+                    </a>
+                </td>
                 <td class="text-center">
                     <i th:if="${cliente.alta}" class="fa fa-circle text-success "></i>
                     <div th:if="${cliente.alta}">Activo</div>

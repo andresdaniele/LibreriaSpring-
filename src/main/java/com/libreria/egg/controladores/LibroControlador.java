@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import sun.print.resources.serviceui;
 
 @Controller
 @RequestMapping("/libro")
@@ -82,9 +83,8 @@ public class LibroControlador {
     public String editarLibro(ModelMap modelo, @PathVariable String id) {
 
         try {
-            Libro libro = libroServicio.buscarLibrosPorId(id);
 
-            modelo.put("libro", libro);
+            modelo.put("libro", libroServicio.buscarLibrosPorId(id));
             modelo.put("autores", autorServicio.listarTodosLosAutoresActivos());
             modelo.put("editoriales", editorialServicio.listarTodasLasEditorialesActivas());
 
@@ -128,13 +128,14 @@ public class LibroControlador {
     }
 
     @GetMapping("/baja/{id}")
-    public String darLibroDeBaja(@PathVariable String id) {
+    public String darLibroDeBaja(@PathVariable String id, ModelMap modelo) {
         try {
             libroServicio.deshabilitarLibro(id);
             return "redirect:/libro/listar";
         } catch (ErrorServicio e) {
             System.out.println(e.getMessage());
-            return "redirect:/libro/listar";
+            modelo.put("error", e.getMessage());
+            return "listarLibro";
         }
     }
 }

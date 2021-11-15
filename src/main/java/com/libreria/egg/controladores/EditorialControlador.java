@@ -105,14 +105,15 @@ public class EditorialControlador {
     }
 
     @GetMapping("/alta/{id}")
-    public String darDeAltaEditorial(@PathVariable String id) {
+    public String darDeAltaEditorial(@PathVariable String id, ModelMap modelo) {
 
         try {
             editorialServicio.habilitarEditorial(id);
             return "redirect:/editorial/listar";
         } catch (ErrorServicio e) {
             System.out.println(e.getMessage());
-            return "redirect:/editorial/listar";
+            modelo.put("error", e.getMessage());
+            return "listarEitorial";
         }
 
     }
