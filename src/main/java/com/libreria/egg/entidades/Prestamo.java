@@ -8,27 +8,29 @@ import javax.persistence.OneToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import org.hibernate.annotations.GenericGenerator;
-
+import org.springframework.format.annotation.DateTimeFormat;
 
 @Entity
 public class Prestamo {
-    
+
     @Id
     @GeneratedValue(generator = "uuid")
     @GenericGenerator(name = "uuid", strategy = "uuid2")
     String id;
-    
-    @Temporal(TemporalType.TIMESTAMP)
+
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @Temporal(TemporalType.DATE)
     Date fechaPrestamo;
-    
-    @Temporal(TemporalType.TIMESTAMP)
+
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @Temporal(TemporalType.DATE)
     Date fechaDevolucion;
-    
+
     Boolean alta;
-    
+
     @OneToOne
     Libro libro;
-    
+
     @OneToOne
     Cliente cliente;
 
@@ -58,7 +60,7 @@ public class Prestamo {
     public void setFechaDevolucion(Date fechaDevolucion) {
         this.fechaDevolucion = fechaDevolucion;
     }
-    
+
     public Boolean getAlta() {
         return alta;
     }
@@ -83,9 +85,4 @@ public class Prestamo {
         this.cliente = cliente;
     }
 
-   
-            
-    
-    
-            
 }

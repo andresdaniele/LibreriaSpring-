@@ -1,6 +1,6 @@
 package com.libreria.egg.errores;
 
-public class ErrorServicio extends Exception{
+public class ErrorServicio extends Exception {
 
     public ErrorServicio() {
     }
@@ -8,7 +8,4 @@ public class ErrorServicio extends Exception{
     public ErrorServicio(String msj) {
         super(msj);
     }
-    
-    
-    
 }

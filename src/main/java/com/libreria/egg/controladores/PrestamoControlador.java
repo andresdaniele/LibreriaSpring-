@@ -50,7 +50,7 @@ public class PrestamoControlador {
 
     @PostMapping("/cargar")
     public String cargar(ModelMap modelo, @RequestParam(value = "fechaDevolucion", required = false)
-            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date fechaDevolucion,
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Date fechaDevolucion,
             @RequestParam(required = false) String idLibro, @RequestParam(required = false) String idCliente) {
         try {
             Libro libro = libroServicio.buscarLibrosPorId(idLibro);
@@ -120,7 +120,7 @@ public class PrestamoControlador {
 
     @PostMapping("/editar/{id}")
     public String editarPrestamo(ModelMap modelo, @PathVariable String id, @RequestParam(value = "fechaDevolucion", required = false)
-            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date fechaDevolucion, @RequestParam(required = false) String idLibro,
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Date fechaDevolucion, @RequestParam(required = false) String idLibro,
             @RequestParam(required = false) String idCliente) {
 
         try {
